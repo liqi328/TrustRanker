@@ -1,3 +1,9 @@
+package trustrank;
+
+import graph.AdjacencyGraph;
+import graph.DirectedAdjacencyGraph;
+import graph.GraphReader;
+import graph.GraphUtil;
 
 public class TrustRankRunner {
 	private SeedSelectionStrategy strategy;
@@ -12,6 +18,12 @@ public class TrustRankRunner {
 		AdjacencyGraph g = new DirectedAdjacencyGraph();
 		GraphReader.read(ppiFilename, g);
 		
+		double[] seeds = strategy.selectSeeds(goodSeedFilename, g, L);
+		
+		return run(g, seeds);
+	}
+	
+	public double[] run(AdjacencyGraph g, String goodSeedFilename){		
 		double[] seeds = strategy.selectSeeds(goodSeedFilename, g, L);
 		
 		return run(g, seeds);

@@ -1,3 +1,10 @@
+package pagerank;
+
+import rank.RankUtil;
+import graph.AdjacencyGraph;
+import graph.DirectedAdjacencyGraph;
+import graph.GraphReader;
+import graph.GraphUtil;
 
 public class PageRankTester {
 	public static void main(String[] args){
@@ -7,19 +14,22 @@ public class PageRankTester {
 	
 	public static void run_inverse_matrix(){
 		String ppiFilename = "E:/2013疾病研究/实验数据/page_rank/test/testrank.txt";
+		String goodSeedFilename = "E:/2013疾病研究/实验数据/page_rank/test/seeds.txt";
 		AdjacencyGraph g = new DirectedAdjacencyGraph();
 		GraphReader.read(ppiFilename, g);
 		
 		//print_info(g);
 		System.out.println("run_inverse_matrix:");
 		
-		run(GraphUtil.getInverseTransitionMatrix(g));
-		
+		double[] rankScores = new InversePageRankRunner(new PriorStartProbabilityStrategy(goodSeedFilename)).run(g);
+		System.out.println(RankUtil.array2String(rankScores, g));
+
 		System.out.println("-------------------------------------");
 	}
 	
 	public static void run_transition_matrix(){
 		String ppiFilename = "E:/2013疾病研究/实验数据/page_rank/test/testrank.txt";
+		String goodSeedFilename = "E:/2013疾病研究/实验数据/page_rank/test/seeds.txt";
 		AdjacencyGraph g = new DirectedAdjacencyGraph();
 		GraphReader.read(ppiFilename, g);
 		
@@ -27,17 +37,12 @@ public class PageRankTester {
 		
 		System.out.println("run_transition_matrix:");
 		
-		run(GraphUtil.getTransitionMatrix(g));
-		
-		System.out.println("-------------------------------------");
-	}
-	
-	private static void run(double[][] matrix){
-		double[] rank = PageRankRunner.run(matrix);
+		double[] rank = new PageRankRunner(new PriorStartProbabilityStrategy(goodSeedFilename)).run(g);
 		for(int i = 0; i < rank.length; ++i){
         	//System.out.println(rank[i]);
         	System.out.printf("%.3f\n", rank[i]);
         }
+		System.out.println("-------------------------------------");
 	}
 	
 	private static void print_info(AdjacencyGraph g){

@@ -1,3 +1,4 @@
+package pagerank;
 
 public class PageRank {
 	private double[][] transitionMatrix;
@@ -40,10 +41,10 @@ public class PageRank {
         {
             int j = i%2;
             int k = (i+1)%2;
-            for(int m = 0; m<7; ++m)
+            for(int m = 0; m < startProbability.length; ++m)
             {
                 r[m][k] = 0.0;
-                for(int n = 0; n<7; ++n)
+                for(int n = 0; n < startProbability.length; ++n)
                 {
                         r[m][k] += alpha * transitionMatrix[m][n] * r[n][j];
                 }

@@ -1,6 +1,8 @@
+package graph;
 
 public class DirectedAdjacencyGraph extends AdjacencyGraph{
 	
+	@Override
 	public void addEdge(String from, String to, double w){
 		allocMemory();
 		
@@ -10,6 +12,7 @@ public class DirectedAdjacencyGraph extends AdjacencyGraph{
 		adjacencyMatrix[fromId][toId] = w;
 	}
 	
+	@Override
 	public int getEdgeNum(){
 		if(adjacencyMatrix == null){
 			return 0;

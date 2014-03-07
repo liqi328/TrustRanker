@@ -1,3 +1,4 @@
+package graph;
 
 
 import java.util.HashMap;
@@ -108,6 +109,7 @@ public class AdjacencyGraph{
 		return name2IndexMap.get(name);
 	}
 	
+	@Override
 	public String toString(){
 		StringBuffer sb = new StringBuffer();
 		sb.append("node number: " + getNodeNum()).append("\n");

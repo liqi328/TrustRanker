@@ -1,19 +1,10 @@
+package rank;
 import java.util.ArrayList;
 import java.util.List;
 
 /*
  * 从数组中选出前n大(小)的数
  * */
-
-class Rank{
-	public int index = 0;
-	public double value = 0.0;
-	
-	public Rank(int i, double v){
-		index = i;
-		value = v;
-	}
-}
 
 public class TopNAlgorithm {
 	public static List<Rank> run(double[] values, int L){
