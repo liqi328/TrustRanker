@@ -41,11 +41,11 @@ class InputArgument{
 	}
 	
 	public String getOutputDir(){
-		File outputDir = new File(p.getProperty("outputDir"));
+		File outputDir = new File(p.getProperty("outputdir"));
 		if(!outputDir.exists()){
 			outputDir.mkdirs();
 		}
-		return p.getProperty("outputDir");
+		return p.getProperty("outputdir");
 	}
 }
 

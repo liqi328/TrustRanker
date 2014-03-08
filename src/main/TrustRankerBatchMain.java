@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BatchMain {
+public class TrustRankerBatchMain {
 	public static void main(String[] args){
 		if(args.length != 1){
 			System.out.println("Argument Error.");
