@@ -11,7 +11,7 @@ import util.FileUtil;
 import util.WriterUtil;
 
 public class ResultPreProcess {
-	private static String dirName = "E:/2013疾病研究/实验数据/TrustRanker/output";
+	private static String dirName = "E:/2013疾病研究/实验数据/TrustRanker/19disease/output";
 	
 	public static void main(String[] args){
 		File[] diseasesDir = FileUtil.getDirectoryList(dirName);
@@ -61,14 +61,18 @@ public class ResultPreProcess {
 		
 		List<String> rankList = readRankFile(rankFile, 100);
 		
+		boolean flag = false;
 		for(int i = 0; i <rankList.size(); ++i){
 			if(rankList.get(i).split("\t")[0].equals(dir.getName())){
 				rankStr.append("\t").append(i + 1).append("\t").append(rankList.get(i).split("\t")[1]).append("\n");
+				flag = true;
 				break;
 			}
 		}
 		//若该target不在前100,怎么办 Undo
-		
+		if(!flag){
+			rankStr.append("\t").append("101").append("\t0.0\n");
+		}
 		return rankStr.toString();
 	}
 	
