@@ -17,7 +17,6 @@ public class DiseaseSimilarity {
 	private Map<String, Integer> omimId2IndexMap;
 	private Map<Integer, Row> rowsMap;
 	
-	
 	public double getTwoDiseaseSimilarity(String omimId1, String omimId2){
 		Integer i = omimId2IndexMap.get(omimId1);
 		Integer j = omimId2IndexMap.get(omimId2);
@@ -29,13 +28,14 @@ public class DiseaseSimilarity {
 		return rowsMap.get(i).row[j];
 	}
 	
-	public void load(){
+	public void read(){
 		String similarityFilepath = "E:/2013疾病研究/疾病数据/Disease-DiseaseSimilarity/PhenSim.tsv";
 		
-		load(similarityFilepath);
+		read(similarityFilepath);
 	}
 	
-	public void load(String similarityFilepath){
+	public void read(String similarityFilepath){
+		
 		omimId2IndexMap = new HashMap<String, Integer>();
 		rowsMap = new HashMap<Integer, Row>();
 		int index = 0;
@@ -69,12 +69,12 @@ public class DiseaseSimilarity {
 	
 	public static void main(String[] args){
 		DiseaseSimilarity similarity = new DiseaseSimilarity();
-		similarity.load();
+		similarity.read();
 		
-		String omimId1 = "114480";
-		String omimId2 = "600185";
+		String omimId1 = "100050";
+		String omimId2 = "100070";
 		
 		System.out.println(similarity.getTwoDiseaseSimilarity(omimId1, omimId2));
-		System.out.println(similarity.getTwoDiseaseSimilarity("114480", "113300"));
+		System.out.println(similarity.getTwoDiseaseSimilarity("100675", "100050"));
 	}
 }

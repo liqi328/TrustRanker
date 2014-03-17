@@ -51,5 +51,15 @@ public class GraphReader {
 		
 		in.close();
 	}
+	
+	public static void main(String[] args){
+		String ppiFilepath = "E:/2013疾病研究/实验数据/TrustRanker/testppi.txt";
+		AdjacencyGraph g = new AdjacencyGraph();
+		
+		GraphReader.read(ppiFilepath, g);
+		
+		System.out.println(g);
+		System.out.println(g.edgesToString());
+	}
 
 }

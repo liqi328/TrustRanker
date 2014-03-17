@@ -6,13 +6,13 @@ import graph.GraphReader;
 import graph.GraphUtil;
 
 public class PageRankRunner {
-	protected PageRankStartProbabilityStrategy strategy = null;
+	protected StartProbabilityStrategy strategy = null;
 	
 	public PageRankRunner(){
 		strategy = new AvageStartProbabilityStrategy();
 	}
 	
-	public PageRankRunner(PageRankStartProbabilityStrategy strategy){
+	public PageRankRunner(StartProbabilityStrategy strategy){
 		this.strategy = strategy;
 	}
 	

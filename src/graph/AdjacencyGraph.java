@@ -100,6 +100,10 @@ public class AdjacencyGraph{
 		return false;
 	}
 	
+	public boolean containsNode(String node){
+		return name2IndexMap.containsKey(node);
+	}
+	
 	public String getNodeName(int index) {
 		return index2NameMap.get(index);
 		
@@ -107,6 +111,19 @@ public class AdjacencyGraph{
 
 	public Integer getNodeIndex(String name) {
 		return name2IndexMap.get(name);
+	}
+	
+	public String edgesToString(){
+		StringBuffer sb = new StringBuffer();
+		
+		for(int i = 0; i < getNodeNum(); ++i){
+			for(int j = 0; j < getNodeNum(); ++j){
+				sb.append(adjacencyMatrix[i][j]).append("\t");
+			}
+			sb.append("\n");
+		}
+		
+		return sb.toString();
 	}
 	
 	@Override

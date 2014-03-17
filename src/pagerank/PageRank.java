@@ -54,7 +54,7 @@ public class PageRank {
         }
         
         rankScores = new double[startProbability.length];
-        int k = (numberOfIteration + 1) % 2;
+        int k = numberOfIteration % 2;
         for(int i = 0; i < startProbability.length; ++i){
         	rankScores[i] = r[i][k];
         	//System.out.println(r[i][k]);

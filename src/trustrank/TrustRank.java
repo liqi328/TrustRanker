@@ -53,7 +53,7 @@ public class TrustRank {
         }
         
         rankScores = new double[d.length];
-        int k = (numberOfIteration + 1) % 2;
+        int k = numberOfIteration % 2;
         for(int i = 0; i < d.length; ++i){
         	rankScores[i] = r[i][k];
         	//System.out.println(r[i][k]);

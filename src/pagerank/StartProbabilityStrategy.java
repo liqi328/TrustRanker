@@ -4,6 +4,6 @@ package pagerank;
 import graph.AdjacencyGraph;
 
 
-interface PageRankStartProbabilityStrategy{
+public interface StartProbabilityStrategy{
 	public double[] getStartProbability(AdjacencyGraph g);
 }

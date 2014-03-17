@@ -6,7 +6,7 @@ import java.util.Set;
 
 import trustrank.SeedSelectionStrategy;
 
-public class PriorStartProbabilityStrategy implements PageRankStartProbabilityStrategy{
+public class PriorStartProbabilityStrategy implements StartProbabilityStrategy{
 	private String seedFilename;
 	
 	public PriorStartProbabilityStrategy(String seedFilename){

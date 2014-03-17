@@ -8,7 +8,7 @@ public class InversePageRankRunner extends PageRankRunner {
 		
 	}
 	
-	public InversePageRankRunner(PageRankStartProbabilityStrategy strategy){
+	public InversePageRankRunner(StartProbabilityStrategy strategy){
 		super(strategy);
 	}
 	

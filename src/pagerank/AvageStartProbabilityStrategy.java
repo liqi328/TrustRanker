@@ -2,7 +2,7 @@ package pagerank;
 
 import graph.AdjacencyGraph;
 
-public class AvageStartProbabilityStrategy implements PageRankStartProbabilityStrategy{
+public class AvageStartProbabilityStrategy implements StartProbabilityStrategy{
 	@Override
 	public double[] getStartProbability(AdjacencyGraph g){
 		int n = g.getNodeNum();
