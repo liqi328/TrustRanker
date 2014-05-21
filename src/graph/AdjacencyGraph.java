@@ -50,6 +50,16 @@ public class AdjacencyGraph{
 		return matrix_ret;
 	}
 	
+	public int getDegreeOfNode(int nodeIndex){
+		int degree = 0;
+		for(int j = 0; j < adjacencyMatrix.length; ++j){
+			if(adjacencyMatrix[nodeIndex][j] != INF){
+				degree++;
+			}
+		}
+		return degree;
+	}
+	
 	public int getNodeNum(){
 		return name2IndexMap.size();
 	}
@@ -121,6 +131,25 @@ public class AdjacencyGraph{
 				sb.append(adjacencyMatrix[i][j]).append("\t");
 			}
 			sb.append("\n");
+		}
+		
+		return sb.toString();
+	}
+	
+	public String graphToString(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("node number: " + getNodeNum()).append("\n");
+		sb.append("edge number: " + getEdgeNum()).append("\n");
+		
+		for(int i = 0; i < getNodeNum(); ++i){
+			for(int j = 0; j < getNodeNum(); ++j){
+				if(i == j) continue;
+				if(adjacencyMatrix[i][j] != INF){
+					sb.append(index2NameMap.get(i)).append("\t");
+					sb.append(index2NameMap.get(j)).append("\t");
+					sb.append(adjacencyMatrix[i][j]).append("\n");
+				}
+			}
 		}
 		
 		return sb.toString();

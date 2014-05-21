@@ -4,7 +4,7 @@ public class TrustRank {
 	private double alpha = 0.85;
 	private int numberOfIteration = 20;
 	
-	private double[] d;
+	private double[] startProbability;
 	
 	private double[] rankScores;
 	
@@ -17,9 +17,9 @@ public class TrustRank {
 	}
 	
 	public void setSeed(double[] seeds){
-		d = new double[seeds.length];
-		for(int i = 0; i < d.length; ++i){
-			d[i] = seeds[i];
+		startProbability = new double[seeds.length];
+		for(int i = 0; i < startProbability.length; ++i){
+			startProbability[i] = seeds[i];
 		}
 	}
 	
@@ -29,10 +29,10 @@ public class TrustRank {
 	
 	public void run(){
 
-		double[][] r = new double[d.length][];
-		for(int i = 0; i < d.length; ++i){
+		double[][] r = new double[startProbability.length][];
+		for(int i = 0; i < startProbability.length; ++i){
 			r[i] = new double[2];
-			r[i][0] = d[i];
+			r[i][0] = startProbability[i];
 			r[i][1] = 0;
 		}
 		
@@ -40,21 +40,21 @@ public class TrustRank {
         {
             int j = i%2;
             int k = (i+1)%2;
-            for(int m = 0; m < d.length; ++m)
+            for(int m = 0; m < startProbability.length; ++m)
             {
                 r[m][k] = 0.0;
-                for(int n = 0; n < d.length; ++n)
+                for(int n = 0; n < startProbability.length; ++n)
                 {
                         r[m][k] += alpha * transitionMatrix[m][n] * r[n][j];
                 }
-                r[m][k] += (1 - alpha) * d[m];
+                r[m][k] += (1 - alpha) * startProbability[m];
             }
 
         }
         
-        rankScores = new double[d.length];
+        rankScores = new double[startProbability.length];
         int k = numberOfIteration % 2;
-        for(int i = 0; i < d.length; ++i){
+        for(int i = 0; i < startProbability.length; ++i){
         	rankScores[i] = r[i][k];
         	//System.out.println(r[i][k]);
         }

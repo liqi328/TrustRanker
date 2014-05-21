@@ -1,4 +1,4 @@
-package prince;
+package pagerank;
 
 import graph.AdjacencyGraph;
 import graph.DirectedAdjacencyGraph;
@@ -10,20 +10,17 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import prince.NormalizeWeightOfPPI;
 import rank.RankUtil;
 import util.FileUtil;
+import util.MyLogger;
 import util.WriterUtil;
-import diseasefamily.Disorder;
 import diseasefamily.Gene;
 import diseasefamily.GeneDiseaseAssociation;
-import diseasesimilarity.DiseaseDiseasePhenotypeSimilarity;
-
 
 class InputArgument{
 	private Properties p = new Properties();
@@ -42,26 +39,12 @@ class InputArgument{
 		return p.getProperty("ppiFilepath");
 	}
 	
-	public String getDiseaseSimilarityFilepath(){
-		return p.getProperty("diseaseSimilarityFilepath");
-	}
-	
 	public String getGeneDiseaseAssociationFilepath(){
 		return p.getProperty("geneDiseaseAssociationFilepath");
 	}
 	
 	public String getDiseaseFilepath(){
 		return p.getProperty("diseaseFilepath");
-	}
-	
-	
-	/**
-	 * alpha参数
-	 * @return
-	 */
-	public String[] getAthreshholdArray(){
-		//System.out.println("alpha_array = " + Arrays.toString(p.getProperty("a_threshhold_array").split(",")));
-		return p.getProperty("alpha_array").split(",");
 	}
 	
 	public String getOutputDir(){
@@ -73,18 +56,16 @@ class InputArgument{
 	}
 }
 
-public class PrinceCrossValidation {
+public class PageRankPriosCrossValidation {
 	private String ppiFilepath;
-	private String diseaseSimilarityFilepath;
 	private String geneDiseaseAssociationFilepath;
 	private String diseaseFilepath;
 	
 	private String outputDir;
 	
-	public PrinceCrossValidation(String ppiFilepath, String diseaseSimilarityFilepath,
+	public PageRankPriosCrossValidation(String ppiFilepath,
 			String geneDiseaseAssociationFilepath, String diseaseFilepath, String outputDir){
 		this.ppiFilepath = ppiFilepath;
-		this.diseaseSimilarityFilepath = diseaseSimilarityFilepath;
 		this.geneDiseaseAssociationFilepath = geneDiseaseAssociationFilepath;
 		this.diseaseFilepath = diseaseFilepath;
 		this.outputDir = outputDir;
@@ -96,48 +77,54 @@ public class PrinceCrossValidation {
 		
 		double[][] normalizedMatrix = NormalizeWeightOfPPI.nomalizedWeightMatrix(g);
 		
-		DiseaseDiseasePhenotypeSimilarity diseaseSimilarity = new DiseaseDiseasePhenotypeSimilarity(diseaseSimilarityFilepath);
-		
 		GeneDiseaseAssociation associations = new GeneDiseaseAssociation();
 		associations.read(geneDiseaseAssociationFilepath);
-		
-		PrinceStartProbabilityStrategy strategy = new PrinceStartProbabilityStrategy(g,
-				diseaseSimilarity, associations);
-		
-		PrinceRunner runner = new PrinceRunner(normalizedMatrix, strategy);
 		
 		Set<String> diseaseOmimIdSet = readDiseaseFile();
 		
 		for(String diseaseOmimId: diseaseOmimIdSet){
-			run_one_disease(diseaseOmimId, associations, runner, g);
+			run_one_disease(diseaseOmimId, associations, normalizedMatrix, g);
 		}
 	}
 	
-	public void run_one_disease(String diseaseOmimId, GeneDiseaseAssociation associations,
-			PrinceRunner runner, AdjacencyGraph g){
+	public void run_one_disease(String diseaseOmimId, GeneDiseaseAssociation associations, double[][] normalizedMatrix, AdjacencyGraph g){
 		System.out.println("Disease: " + diseaseOmimId);
-		Map<String, Disorder> tmpDisorderMap = new HashMap<String, Disorder>();
 		
 		String outputDirPath = outputDir + "/" + diseaseOmimId;
 		FileUtil.makeDir(new File(outputDirPath));
 		
 		System.out.println("genes: " + associations.disorderMap.get(diseaseOmimId).geneMap.size());
 		
+		PageRankPriorStartProbabilityStrategy strategy = new PageRankPriorStartProbabilityStrategy();
+		
+		
+		Set<String> remainedGeneIdSet = new HashSet<String>();
+		//remainedGeneIdSet.addAll(associations.geneMap.keySet());
+		remainedGeneIdSet.addAll(associations.disorderMap.get(diseaseOmimId).geneMap.keySet());
+		
 		for(Gene gene: associations.disorderMap.get(diseaseOmimId).geneMap.values()){
-			System.out.println("-->" + gene.getHprdId());
-			tmpDisorderMap.putAll(gene.disorderMap);
-			gene.disorderMap.clear();
+			//若该基因不在PPI网络上，则无需做交叉验证
+			if(!g.containsNode(gene.getGeneNameInPPI()))continue;
 			
-			double[] rankScores = runner.run(diseaseOmimId);
+			System.out.println(gene.getGeneNameInPPI());
 			
-			String outputDirPath_2 = outputDirPath + "/" + gene.getHprdId();
+			remainedGeneIdSet.remove(gene.getGeneNameInPPI());
+			
+			double[] start = strategy.getStartProbability(g, remainedGeneIdSet);
+			
+			PageRank pr = new PageRank();
+			pr.setMatrix(normalizedMatrix);
+			pr.setStartProbability(start);
+			pr.run();
+			double[] rankScores = pr.getRankScores();
+			
+			String outputDirPath_2 = outputDirPath + "/" + gene.getGeneNameInPPI();
 			FileUtil.makeDir(new File(outputDirPath_2));
 			
-			WriterUtil.write(outputDirPath_2 + "/prince_ranks.txt",
+			WriterUtil.write(outputDirPath_2 + "/PRP_ranks[v].txt",
 					RankUtil.array2String(rankScores, g));
 			
-			gene.disorderMap.putAll(tmpDisorderMap);
-			tmpDisorderMap.clear();
+			remainedGeneIdSet.add(gene.getGeneNameInPPI());
 		}
 	}
 	
@@ -157,22 +144,62 @@ public class PrinceCrossValidation {
 		return diseaseOmimIdSet;
 	}
 	
+	public void prioritizing(){
+		AdjacencyGraph g = new DirectedAdjacencyGraph();
+		GraphReader.read(ppiFilepath, g);
+		
+		double[][] normalizedMatrix = NormalizeWeightOfPPI.nomalizedWeightMatrix(g);
+		
+		GeneDiseaseAssociation associations = new GeneDiseaseAssociation();
+		associations.read(geneDiseaseAssociationFilepath);
+		
+		Set<String> diseaseOmimIdSet = readDiseaseFile();
+		
+		for(String diseaseOmimId: diseaseOmimIdSet){
+			prioritizing_one_disease(diseaseOmimId, associations, normalizedMatrix, g);
+		}
+	}
+	
+	public void prioritizing_one_disease(String diseaseOmimId, GeneDiseaseAssociation associations, double[][] normalizedMatrix, AdjacencyGraph g){
+		System.out.println("Disease OmimId: " + diseaseOmimId);
+		
+		PageRankPriorStartProbabilityStrategy strategy = new PageRankPriorStartProbabilityStrategy();
+		double[] start = strategy.getStartProbability(g, associations.disorderMap.get(diseaseOmimId).geneMap.keySet());
+		
+		PageRank pr = new PageRank();
+		pr.setMatrix(normalizedMatrix);
+		pr.setStartProbability(start);
+		pr.run();
+		double[] rankScores = pr.getRankScores();
+		
+		String outputDirPath = outputDir + "/" + diseaseOmimId;
+		FileUtil.makeDir(new File(outputDirPath));
+		
+		WriterUtil.write(outputDirPath + "/PRP_ranks[p].txt",
+				RankUtil.array2String(rankScores, g));
+	}
+	
 	
 	public static void main(String[] args){
 		if(args.length != 1){
 			System.out.println("Argument Error.");
-			System.out.println("Using method: java -Xmx2048m -jar prince.jar ./input/config.txt");
+			System.out.println("Using method: java -Xmx2048m -jar PRP.jar ./input/config.txt");
 			System.exit(-1);
 		}
 		
 		InputArgument input = new InputArgument(args[0]);
 		
-		PrinceCrossValidation validation = new PrinceCrossValidation(input.getPpiFilepath(),
-				input.getDiseaseSimilarityFilepath(), input.getGeneDiseaseAssociationFilepath(),
+		PageRankPriosCrossValidation validation = new PageRankPriosCrossValidation(input.getPpiFilepath(),
+				input.getGeneDiseaseAssociationFilepath(),
 				input.getDiseaseFilepath(), input.getOutputDir());
-		System.out.println("Prince Validation starting...");
+		
+		System.out.println("PageRankPrios Validation starting...");
+		
 		validation.batch_run();
-		System.out.println("Prince Validation finished...");
+		validation.prioritizing();
+		
+		MyLogger.log(args[0] + "---> completed.");
+		System.out.println("PageRankPrios Validation finished...");
 	}
 	
 }

@@ -10,6 +10,8 @@ public class Gene{
 	private String name;
 	private String hprdId;
 	
+	private String geneNameInPPI; //与PPI网络使用相同的ID类型的值
+	
 	
 	/* 与该基因有关的所有的疾病*/
 	public final Map<String, Disorder> disorderMap;
@@ -41,5 +43,13 @@ public class Gene{
 
 	public String getHprdId() {
 		return hprdId;
+	}
+
+	public String getGeneNameInPPI() {
+		return geneNameInPPI;
+	}
+
+	public void setGeneNameInPPI(String geneNameInPPI) {
+		this.geneNameInPPI = geneNameInPPI;
 	}
 }

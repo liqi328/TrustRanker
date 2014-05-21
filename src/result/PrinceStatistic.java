@@ -32,12 +32,12 @@ public class PrinceStatistic extends AbstractStatistic{
 	
 	public String run_ranking_statistic(File dir, int top_k){
 		StringBuffer sb = new StringBuffer();
-		
-		File[] files = FileUtil.getFileList(dir.getPath(), createFileFilter(""));
-		sb.append("Prince\t");
-		for(File file : files){
-			sb.append(readRankingGene(file, top_k));
-		}
+//		
+//		File[] files = FileUtil.getFileList(dir.getPath(), createFileFilter(""));
+//		sb.append("Prince\t");
+//		for(File file : files){
+//			sb.append(readRankingGene(file, top_k));
+//		}
 		return sb.toString();
 	}
 }

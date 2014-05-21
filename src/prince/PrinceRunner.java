@@ -1,7 +1,7 @@
 package prince;
 
-import diseasefamily.DiseaseSimilarity;
 import diseasefamily.GeneDiseaseAssociation;
+import diseasesimilarity.DiseaseDiseasePhenotypeSimilarity;
 import graph.AdjacencyGraph;
 import graph.DirectedAdjacencyGraph;
 import graph.GraphReader;
@@ -41,7 +41,7 @@ public class PrinceRunner {
 		
 		double[][] normalizedMatrix = NormalizeWeightOfPPI.nomalizedWeightMatrix(g);
 		
-		DiseaseSimilarity diseaseSimilarity = new DiseaseSimilarity();
+		DiseaseDiseasePhenotypeSimilarity diseaseSimilarity = new DiseaseDiseasePhenotypeSimilarity();
 		GeneDiseaseAssociation associations = new GeneDiseaseAssociation();
 		
 		PrinceStartProbabilityStrategy strategy = new PrinceStartProbabilityStrategy(g,

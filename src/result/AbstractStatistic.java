@@ -46,7 +46,7 @@ public abstract class AbstractStatistic{
 		int count = 0;
 		List<File> retFileList = parseResultFiles();
 		for(File file : retFileList){
-			System.out.println(file);
+			//System.out.println(file);
 			
 			List<Rank> rankList = readRankList(file);
 			if(!isCanStatistic(rankList)){
@@ -59,13 +59,13 @@ public abstract class AbstractStatistic{
 				result.totalValidation++;
 			}
 		}
-		System.out.println("< 4 total = " + count);
+		System.out.println("< 2 total = " + count);
 		
 		return result;
 	}
 	
 	private boolean isCanStatistic(List<Rank> rankList){
-		if(rankList.size() < 4){
+		if(rankList.size() < 2){
 			return false;
 		}
 		return true;
@@ -79,7 +79,15 @@ public abstract class AbstractStatistic{
 			Rank rank = null;
 			String[] cols = null;
 			while((line = in.readLine()) != null){
+				if(line.startsWith("null")){
+					System.out.println(file.getAbsolutePath());
+					return rankList;
+				}
 				cols = line.split("\t");
+				if(cols.length < 3){
+					System.out.println(file.getAbsolutePath());
+					return rankList;
+				}
 				rank = new Rank(-1, Double.parseDouble(cols[2]));
 				rank.setName(cols[0]);
 				rank.setRank(Integer.parseInt(cols[1]));

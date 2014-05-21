@@ -1,17 +1,18 @@
 package prince;
 
 import graph.AdjacencyGraph;
-import diseasefamily.DiseaseSimilarity;
 import diseasefamily.Disorder;
 import diseasefamily.Gene;
 import diseasefamily.GeneDiseaseAssociation;
+import diseasesimilarity.DiseaseDiseasePhenotypeSimilarity;
+import diseasesimilarity.DiseaseDiseaseSimilarity;
 
 public class PrinceStartProbabilityStrategy{
 	private AdjacencyGraph g;
-	private DiseaseSimilarity diseaseSimilarity;
+	private DiseaseDiseaseSimilarity diseaseSimilarity;
 	private GeneDiseaseAssociation associations;
 	
-	public PrinceStartProbabilityStrategy(AdjacencyGraph g, DiseaseSimilarity diseaseSimilarity,
+	public PrinceStartProbabilityStrategy(AdjacencyGraph g, DiseaseDiseaseSimilarity diseaseSimilarity,
 			GeneDiseaseAssociation associations){
 		this.g = g;
 		this.diseaseSimilarity = diseaseSimilarity;
