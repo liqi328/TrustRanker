@@ -27,7 +27,16 @@ public class PrinceResultStatistic {
 		"E:/2013疾病研究/gan/output/bcellleukemia_validation",
 	};
 	public static void main(String[] args){
-		run_myprince("E:/2013疾病研究/实验数据/SP_TrustRanker比较/TRer_output");
+		if(args.length != 1){
+			System.out.println("Argument Error.");
+			System.out.println("Using method: java -jar TrustRanker_Prioritization.jar ./output");
+			System.exit(-1);
+		}
+		
+		PrinceResultPreProcess.run_one(args[0]);
+		run_myprince(args[0]);
+		
+		//run_myprince("E:/2013疾病研究/实验数据/SP_TrustRanker比较/TRer_output");
 
 		//batch_run();
 		//select();
@@ -52,7 +61,7 @@ public class PrinceResultStatistic {
 		
 		StatisticResultAnalysis.writeStatisticResultMap(dirName + File.separator + "statistic.txt", resultMap);
 		
-		StatisticResultAnalysis.calculateRankCutoff(dirName + File.separator + "rank_cutoff.txt", resultMap);
+		StatisticResultAnalysis.calculateRankCutoff(dirName + File.separator + "TrustRanker_rank_cutoff.txt", resultMap);
 	}
 	
 	public static void run_pagerankprios(String dirName){
@@ -77,7 +86,7 @@ public class PrinceResultStatistic {
 		
 		Map<String, StatisticResult> resultMap = new LinkedHashMap<String, StatisticResult>();
 		
-		AbstractStatistic statisticStrategy = new MyPrinceStatistic(dirs);
+		AbstractStatistic statisticStrategy = new TrustRankerStatistic(dirs);
 		
 		String[] alphaArray = new String[]{"1.0", "0.9", "0.8", "0.7", "0.6", 
 				"0.5", "0.4", "0.3", "0.2", "0.1", "0.0"};
@@ -85,13 +94,13 @@ public class PrinceResultStatistic {
 		for(String alpha : alphaArray){
 			statisticStrategy.setAthreshhold(alpha);
 			StatisticResult result = statisticStrategy.run();
-			resultMap.put("TRer_" + alpha, result);
+			resultMap.put("TrustRanker_" + alpha, result);
 			break;
 		}
 		
-		StatisticResultAnalysis.writeStatisticResultMap(dirName + File.separator + "statistic_TRer.txt", resultMap);
+		StatisticResultAnalysis.writeStatisticResultMap(dirName + File.separator + "TrustRanker_statistic.txt", resultMap);
 		
-		StatisticResultAnalysis.calculateRankCutoff(dirName + File.separator + "rank_cutoff_TRer.txt", resultMap);
+		StatisticResultAnalysis.calculateRankCutoff(dirName + File.separator + "TrustRanker_rank_cutoff.txt", resultMap);
 	}
 	
 	private static void select(){

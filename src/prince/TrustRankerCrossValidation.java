@@ -32,15 +32,18 @@ public class TrustRankerCrossValidation {
 	private String diseaseFilepath;
 	private String[] alphaArray;
 	private String outputDir;
+	private String hprdIdMapppingFilepath;
 	
 	public TrustRankerCrossValidation(String ppiFilepath, String diseaseSimilarityFilepath,
-			String geneDiseaseAssociationFilepath, String diseaseFilepath, String outputDir, String[] alphaArray){
+			String geneDiseaseAssociationFilepath, String diseaseFilepath, String outputDir, String[] alphaArray, 
+			String hprdIdMapppingFilepath){
 		this.ppiFilepath = ppiFilepath;
 		this.diseaseSimilarityFilepath = diseaseSimilarityFilepath;
 		this.geneDiseaseAssociationFilepath = geneDiseaseAssociationFilepath;
 		this.diseaseFilepath = diseaseFilepath;
 		this.alphaArray = alphaArray;
 		this.outputDir = outputDir;
+		this.hprdIdMapppingFilepath = hprdIdMapppingFilepath;
 	}
 	
 	public void batch_run(){
@@ -49,7 +52,7 @@ public class TrustRankerCrossValidation {
 		
 		double[][] normalizedMatrix = NormalizeWeightOfPPI.nomalizedWeightMatrix(g);
 		
-		GeneDiseaseAssociation associations = new GeneDiseaseAssociation();
+		GeneDiseaseAssociation associations = new GeneDiseaseAssociation(hprdIdMapppingFilepath);
 		associations.read(geneDiseaseAssociationFilepath);
 		
 		HumanDiseaseNetwork humanDiseaseNetwork = new HumanDiseaseNetwork();
@@ -113,7 +116,7 @@ public class TrustRankerCrossValidation {
 		
 		double[][] normalizedMatrix = NormalizeWeightOfPPI.nomalizedWeightMatrix(g);
 		
-		GeneDiseaseAssociation associations = new GeneDiseaseAssociation();
+		GeneDiseaseAssociation associations = new GeneDiseaseAssociation(hprdIdMapppingFilepath);
 		associations.read(geneDiseaseAssociationFilepath);
 		
 		HumanDiseaseNetwork humanDiseaseNetwork = new HumanDiseaseNetwork();
@@ -174,22 +177,22 @@ public class TrustRankerCrossValidation {
 	public static void main(String[] args){
 		if(args.length != 1){
 			System.out.println("Argument Error.");
-			System.out.println("Using method: java -Xmx2048m -jar TRer.jar ./input/config.txt");
+			System.out.println("Using method: java -Xmx4096m -jar TrustRanker.jar ./TrustRanker_config.txt");
 			System.exit(-1);
 		}
-		//String config = "E:/2013疾病研究/实验数据/TrustRanker/   omim_disease/input/myprinceconfig.txt";
+		//String config = "E:/2013疾病研究/实验数据/TrustRanker/omim_disease/input/myprinceconfig.txt";
 		InputArgument input = new InputArgument(args[0]);
 //		for(String alpha: input.getAthreshholdArray()){
 //			System.out.println(alpha); 
 //		}
 		TrustRankerCrossValidation validation = new TrustRankerCrossValidation(input.getPpiFilepath(),
 				input.getDiseaseSimilarityFilepath(), input.getGeneDiseaseAssociationFilepath(),
-				input.getDiseaseFilepath(), input.getOutputDir(), input.getAthreshholdArray());
-		System.out.println("MyPrince Validation starting...");
+				input.getDiseaseFilepath(), input.getOutputDir(), input.getAthreshholdArray(), input.getHprdIdMappingsFileName());
+		System.out.println("TrustRanker Prioritization starting...");
 		
-		validation.batch_run();
-		//validation.prioritizing();
+		//validation.batch_run();
+		validation.prioritizing();
 		//MyLogger.log(args[0] + "---> completed.");
-		System.out.println("MyPrince Validation finished...");
+		System.out.println("TrustRanker Prioritization finished.");
 	}
 }

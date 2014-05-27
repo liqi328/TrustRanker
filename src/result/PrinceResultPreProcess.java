@@ -15,7 +15,7 @@ public class PrinceResultPreProcess {
 	//private static String dirName = "E:/2013疾病研究/实验数据/Prince/myprince_output";
 	//private static String dirName = "E:/2013疾病研究/实验数据/Prince/pagerankprios_output";
 	//private static String dirName = "E:/2013疾病研究/gan/diabetes_validation";
-	private static String dirName = "E:/2013疾病研究/实验数据/SP_TrustRanker比较/TRer_output";
+	//private static String dirName = "E:/2013疾病研究/实验数据/SP_TrustRanker比较/TRer_output";
 	private static String[] dirNameArray = {
 		"E:/2013疾病研究/gan/output/diabetes_validation",
 		"E:/2013疾病研究/gan/output/skinprostate_validation",
@@ -33,10 +33,11 @@ public class PrinceResultPreProcess {
 	
 	public static void main(String[] args){
 		//batch_run();
-		run_one();
+		String dirName = "E:/2013疾病研究/实验数据/Prince/myprince_output";
+		run_one(dirName);
 	}
 	
-	private static void run_one(){
+	public static void run_one(String dirName){
 		File[] diseasesDir = FileUtil.getDirectoryList(dirName);
 		try {
 			for(File d : diseasesDir){

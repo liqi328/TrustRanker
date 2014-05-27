@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
 
+import prince.InputArgument;
 import util.FileUtil;
 import util.WriterUtil;
 import diseasefamily.Disorder;
@@ -14,14 +15,22 @@ import diseasefamily.GeneDiseaseAssociation;
 import diseasefamily.HprdIdMapping;
 import diseasefamily.HprdIdMappingUtil;
 
-public class PrioritizingResult {
+public class PrioritizationResult {
 	//private static String dirName = "E:/2013疾病研究/实验数据/Prince/myprince_prioritizing";
-	private static String dirName = "E:/2013疾病研究/gan/diabetes_validation";
-	private static Map<String, HprdIdMapping> hprdIdIndexedIdMappingMap = HprdIdMappingUtil.getHprdIdIndexIdMapping();
+	//private static String dirName = "E:/2013疾病研究/gan/diabetes_validation";
+	//private static Map<String, HprdIdMapping> hprdIdIndexedIdMappingMap = HprdIdMappingUtil.getHprdIdIndexIdMapping();
+	private static Map<String, HprdIdMapping> hprdIdIndexedIdMappingMap;
 	
-	public static void run(){
-		GeneDiseaseAssociation associations = new GeneDiseaseAssociation();
-		associations.read();
+	private static void initHprdIdMapping(String hprdIdMapppingFilepath){
+		HprdIdMappingUtil.setHprdIdMappingFilePath(hprdIdMapppingFilepath);
+		hprdIdIndexedIdMappingMap = HprdIdMappingUtil.getHprdIdIndexIdMapping();
+	}
+	
+	public static void run(String dirName,String hprdIdMapppingFilepath, String geneDiseaseAssociationFilepath){
+		initHprdIdMapping(hprdIdMapppingFilepath);
+		
+		GeneDiseaseAssociation associations = new GeneDiseaseAssociation(hprdIdMapppingFilepath);
+		associations.read(geneDiseaseAssociationFilepath);
 		
 		File[] diseasesDir = FileUtil.getDirectoryList(dirName);
 		try {
@@ -43,7 +52,7 @@ public class PrioritizingResult {
 				allRanksBuffer.append("\n--------------------------------------------------\n");
 			}
 			
-			WriterUtil.write(dirName + "/all_top10.txt", allRanksBuffer.toString());
+			WriterUtil.write(dirName + "/TrustRanker_top200.txt", allRanksBuffer.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,7 +68,7 @@ public class PrioritizingResult {
 			ranksBuffer.append(readTopN(dir.getAbsolutePath()+"/TRer_ranks[p]_" + alpha + ".txt", 200));
 			ranksBuffer.append("\n");
 		}
-		WriterUtil.write(dir.getAbsolutePath() + "/all_top10.txt", ranksBuffer.toString());
+		//WriterUtil.write(dir.getAbsolutePath() + "/all_top200.txt", ranksBuffer.toString());
 		
 		return ranksBuffer.toString();
 	}
@@ -81,6 +90,12 @@ public class PrioritizingResult {
 	}
 	
 	public static void main(String[] args){
-		run();
+		if(args.length != 1){
+			System.out.println("Argument Error.");
+			System.out.println("Using method: java -jar TrustRanker_TopPrediction.jar ./TrustRanker_config.txt");
+			System.exit(-1);
+		}
+		InputArgument input = new InputArgument(args[0]);
+		run(input.getOutputDir(), input.getHprdIdMappingsFileName(), input.getGeneDiseaseAssociationFilepath());
 	}
 }

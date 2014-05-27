@@ -19,6 +19,16 @@ public class GeneDiseaseAssociation {
 	public final Map<String, Gene> geneMap = new HashMap<String, Gene>();
 	public final Map<String, Disorder> disorderMap = new HashMap<String, Disorder>();
 	
+	private String hprdIdMapppingFilepath = "E:/2013疾病研究/疾病数据/HumanPPI/HPRD_Release9_062910/FLAT_FILES_072010/HPRD_ID_MAPPINGS.txt";
+	
+	public GeneDiseaseAssociation(){
+
+	}
+	
+	public GeneDiseaseAssociation(String hprdIdMapppingFilepath2){
+		hprdIdMapppingFilepath = hprdIdMapppingFilepath2;
+	}
+	
 	public void read(){
 		//String geneDiseaseAssociationFilepath = "E:/2013疾病研究/疾病数据/OMIM/geneOmimId_diseaseOmimId_in_ppi.txt";
 		String geneDiseaseAssociationFilepath = "E:/2013疾病研究/疾病数据/OMIM/geneOmimId_diseaseOmimId.txt";
@@ -27,6 +37,7 @@ public class GeneDiseaseAssociation {
 	}
 	
 	public void read(String geneDiseaseAssociationFilepath){
+		HprdIdMappingUtil.setHprdIdMappingFilePath(hprdIdMapppingFilepath);
 		Map<String, HprdIdMapping> entrezIdIndexedIdMappingMap = HprdIdMappingUtil.getEntrezIdIndexedIdMapping();
 		Map<String, HprdIdMapping> omimIdIndexedIdMappingMap = HprdIdMappingUtil.getOmimIdIndexedIdMapping();
 		

@@ -14,7 +14,7 @@ import diseasefamily.HprdIdMapping;
 import diseasefamily.HprdIdMappingUtil;
 
 class StatisticResult{
-	public static final int RANK = 102;
+	public static final int RANK = 10000;
 	public int totalValidation = 0;
 	public int[] rankArray = new int[RANK];
 }

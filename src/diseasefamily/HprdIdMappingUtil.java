@@ -13,9 +13,13 @@ public class HprdIdMappingUtil {
 	private static Map<String, HprdIdMapping> entrezIdIndexIdMappingMap = null;
 	private static Map<String, HprdIdMapping> symbolIndexIdMappingMap = null;
 	
-	//private static String filename = "E:/2013疾病研究/疾病数据/HumanPPI/HPRD_Release9_062910/FLAT_FILES_072010/HPRD_ID_MAPPINGS.txt";
-	private static String filename = "./input/HPRD_ID_MAPPINGS.txt";
+	private static String filename = "E:/2013疾病研究/疾病数据/HumanPPI/HPRD_Release9_062910/FLAT_FILES_072010/HPRD_ID_MAPPINGS.txt";
+	//private static String filename = "./input/HPRD_ID_MAPPINGS.txt";
 		
+	public static void setHprdIdMappingFilePath(String filename2){
+		filename = filename2;
+	}
+	
 	public static Map<String, HprdIdMapping> getHprdIdIndexIdMapping(){
 		if(hprdIdIndexedIdMappingMap == null){
 			hprdIdIndexedIdMappingMap = new HprdIdMappingReader(filename).read();

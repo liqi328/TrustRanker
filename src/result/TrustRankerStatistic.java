@@ -5,8 +5,8 @@ import java.io.FileFilter;
 
 import util.FileUtil;
 
-public class MyPrinceStatistic extends AbstractStatistic {
-	public MyPrinceStatistic(File[] resultDirs) {
+public class TrustRankerStatistic extends AbstractStatistic {
+	public TrustRankerStatistic(File[] resultDirs) {
 		super(resultDirs);
 		// TODO Auto-generated constructor stub
 	}
@@ -14,17 +14,17 @@ public class MyPrinceStatistic extends AbstractStatistic {
 	@Override
 	public FileFilter createFileFilter() {
 		//return new ResultFileFilter("myprince_validation_" + a_threshhold);
-		return new ResultFileFilter("myprince_validation_" + a_threshhold);
+		return new ResultFileFilter("TRer_validation_" + a_threshhold);
 	}
 
 	@Override
 	protected void printLogHeader() {
-		System.out.println("--------------- MyPrince_" + a_threshhold + " statistic running -------------");
+		System.out.println("--------------- TrustRanker_" + a_threshhold + " statistic running -------------");
 	}
 
 	@Override
 	protected void printLogFooter() {
-		System.out.println("--------------- MyPrince_" + a_threshhold + " statistic finished -------------");
+		System.out.println("--------------- TrustRanker_" + a_threshhold + " statistic finished -------------");
 	}
 	
 	@Override

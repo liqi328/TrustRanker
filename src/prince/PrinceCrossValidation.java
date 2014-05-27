@@ -6,14 +6,11 @@ import graph.GraphReader;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import rank.RankUtil;
@@ -24,54 +21,6 @@ import diseasefamily.Gene;
 import diseasefamily.GeneDiseaseAssociation;
 import diseasesimilarity.DiseaseDiseasePhenotypeSimilarity;
 
-
-class InputArgument{
-	private Properties p = new Properties();
-	
-	public InputArgument(String configFilepath){
-		try {
-			InputStreamReader is = new InputStreamReader(new FileInputStream(configFilepath), "UTF-8");
-			p.load(is);
-			is.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public String getPpiFilepath(){
-		return p.getProperty("ppiFilepath");
-	}
-	
-	public String getDiseaseSimilarityFilepath(){
-		return p.getProperty("diseaseSimilarityFilepath");
-	}
-	
-	public String getGeneDiseaseAssociationFilepath(){
-		return p.getProperty("geneDiseaseAssociationFilepath");
-	}
-	
-	public String getDiseaseFilepath(){
-		return p.getProperty("diseaseFilepath");
-	}
-	
-	
-	/**
-	 * alpha²ÎÊý
-	 * @return
-	 */
-	public String[] getAthreshholdArray(){
-		//System.out.println("alpha_array = " + Arrays.toString(p.getProperty("a_threshhold_array").split(",")));
-		return p.getProperty("alpha_array").split(",");
-	}
-	
-	public String getOutputDir(){
-		File outputDir = new File(p.getProperty("outputDir"));
-		if(!outputDir.exists()){
-			outputDir.mkdirs();
-		}
-		return p.getProperty("outputDir");
-	}
-}
 
 public class PrinceCrossValidation {
 	private String ppiFilepath;
