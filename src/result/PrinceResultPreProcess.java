@@ -41,8 +41,8 @@ public class PrinceResultPreProcess {
 		File[] diseasesDir = FileUtil.getDirectoryList(dirName);
 		try {
 			for(File d : diseasesDir){
-				processOneDisease_TRer(d);
-				//processOneDisease_PRP(d);
+				//processOneDisease_TRer(d);
+				processOneDisease_PRP(d);
 				//testcomplete(d);
 			}
 		} catch (Exception e) {

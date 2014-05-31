@@ -47,12 +47,13 @@ public class PrioritizationResult {
 				}
 				allRanksBuffer.append("\n\n");
 				
-				allRanksBuffer.append(processOneDisease(d));
+				//allRanksBuffer.append(processOneDisease(d));
+				allRanksBuffer.append(processOneDisease_PRP(d));
 				
 				allRanksBuffer.append("\n--------------------------------------------------\n");
 			}
 			
-			WriterUtil.write(dirName + "/TrustRanker_top200.txt", allRanksBuffer.toString());
+			WriterUtil.write(dirName + "/PRP_top200.txt", allRanksBuffer.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -69,6 +70,17 @@ public class PrioritizationResult {
 			ranksBuffer.append("\n");
 		}
 		//WriterUtil.write(dir.getAbsolutePath() + "/all_top200.txt", ranksBuffer.toString());
+		
+		return ranksBuffer.toString();
+	}
+	
+	private static String processOneDisease_PRP(File dir){
+		StringBuffer ranksBuffer = new StringBuffer();
+		
+		ranksBuffer.append("PRP").append("\t");
+		ranksBuffer.append(readTopN(dir.getAbsolutePath()+"/PRP_ranks[p].txt", 200));
+		ranksBuffer.append("\n");
+		WriterUtil.write(dir.getAbsolutePath() + "/prp_top200.txt", ranksBuffer.toString());
 		
 		return ranksBuffer.toString();
 	}
@@ -92,7 +104,7 @@ public class PrioritizationResult {
 	public static void main(String[] args){
 		if(args.length != 1){
 			System.out.println("Argument Error.");
-			System.out.println("Using method: java -jar TrustRanker_TopPrediction.jar ./TrustRanker_config.txt");
+			System.out.println("Using method: java -jar PRP_TopPrediction.jar ./TrustRanker_config.txt");
 			System.exit(-1);
 		}
 		InputArgument input = new InputArgument(args[0]);

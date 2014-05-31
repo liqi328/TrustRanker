@@ -11,7 +11,7 @@ public class PageRankPriosStatistic extends AbstractStatistic {
 	
 	@Override
 	public FileFilter createFileFilter() {
-		return new ResultFileFilter("pagerankprios_validation");
+		return new ResultFileFilter("PRP_validation");
 	}
 
 	@Override

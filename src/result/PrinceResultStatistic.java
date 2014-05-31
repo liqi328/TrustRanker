@@ -35,6 +35,7 @@ public class PrinceResultStatistic {
 		
 		PrinceResultPreProcess.run_one(args[0]);
 		run_myprince(args[0]);
+		//run_pagerankprios(args[0]);
 		
 		//run_myprince("E:/2013疾病研究/实验数据/SP_TrustRanker比较/TRer_output");
 
@@ -74,9 +75,9 @@ public class PrinceResultStatistic {
 		StatisticResult result = statisticStrategy.run();
 		resultMap.put("PRP", result);
 		
-		StatisticResultAnalysis.writeStatisticResultMap(dirName + File.separator + "statistic_prp.txt", resultMap);
+		StatisticResultAnalysis.writeStatisticResultMap(dirName + File.separator + "prp_statistic.txt", resultMap);
 		
-		StatisticResultAnalysis.calculateRankCutoff(dirName + File.separator + "rank_cutoff_prp.txt", resultMap);
+		StatisticResultAnalysis.calculateRankCutoff(dirName + File.separator + "prp_rank_cutoff.txt", resultMap);
 	}
 	
 	public static void run_myprince(String dirName){
@@ -95,7 +96,6 @@ public class PrinceResultStatistic {
 			statisticStrategy.setAthreshhold(alpha);
 			StatisticResult result = statisticStrategy.run();
 			resultMap.put("TrustRanker_" + alpha, result);
-			break;
 		}
 		
 		StatisticResultAnalysis.writeStatisticResultMap(dirName + File.separator + "TrustRanker_statistic.txt", resultMap);

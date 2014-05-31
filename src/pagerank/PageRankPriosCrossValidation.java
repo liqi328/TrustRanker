@@ -6,55 +6,19 @@ import graph.GraphReader;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 
+import prince.InputArgument;
 import prince.NormalizeWeightOfPPI;
 import rank.RankUtil;
 import util.FileUtil;
-import util.MyLogger;
 import util.WriterUtil;
 import diseasefamily.Gene;
 import diseasefamily.GeneDiseaseAssociation;
 
-class InputArgument{
-	private Properties p = new Properties();
-	
-	public InputArgument(String configFilepath){
-		try {
-			InputStreamReader is = new InputStreamReader(new FileInputStream(configFilepath), "UTF-8");
-			p.load(is);
-			is.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public String getPpiFilepath(){
-		return p.getProperty("ppiFilepath");
-	}
-	
-	public String getGeneDiseaseAssociationFilepath(){
-		return p.getProperty("geneDiseaseAssociationFilepath");
-	}
-	
-	public String getDiseaseFilepath(){
-		return p.getProperty("diseaseFilepath");
-	}
-	
-	public String getOutputDir(){
-		File outputDir = new File(p.getProperty("outputDir"));
-		if(!outputDir.exists()){
-			outputDir.mkdirs();
-		}
-		return p.getProperty("outputDir");
-	}
-}
 
 public class PageRankPriosCrossValidation {
 	private String ppiFilepath;
@@ -62,13 +26,16 @@ public class PageRankPriosCrossValidation {
 	private String diseaseFilepath;
 	
 	private String outputDir;
+	private String hprdIdMapppingFilepath;
 	
 	public PageRankPriosCrossValidation(String ppiFilepath,
-			String geneDiseaseAssociationFilepath, String diseaseFilepath, String outputDir){
+			String geneDiseaseAssociationFilepath, String diseaseFilepath, String outputDir,
+			String hprdIdMapppingFilepath){
 		this.ppiFilepath = ppiFilepath;
 		this.geneDiseaseAssociationFilepath = geneDiseaseAssociationFilepath;
 		this.diseaseFilepath = diseaseFilepath;
 		this.outputDir = outputDir;
+		this.hprdIdMapppingFilepath = hprdIdMapppingFilepath;
 	}
 	
 	public void batch_run(){
@@ -77,7 +44,7 @@ public class PageRankPriosCrossValidation {
 		
 		double[][] normalizedMatrix = NormalizeWeightOfPPI.nomalizedWeightMatrix(g);
 		
-		GeneDiseaseAssociation associations = new GeneDiseaseAssociation();
+		GeneDiseaseAssociation associations = new GeneDiseaseAssociation(hprdIdMapppingFilepath);
 		associations.read(geneDiseaseAssociationFilepath);
 		
 		Set<String> diseaseOmimIdSet = readDiseaseFile();
@@ -150,7 +117,7 @@ public class PageRankPriosCrossValidation {
 		
 		double[][] normalizedMatrix = NormalizeWeightOfPPI.nomalizedWeightMatrix(g);
 		
-		GeneDiseaseAssociation associations = new GeneDiseaseAssociation();
+		GeneDiseaseAssociation associations = new GeneDiseaseAssociation(hprdIdMapppingFilepath);
 		associations.read(geneDiseaseAssociationFilepath);
 		
 		Set<String> diseaseOmimIdSet = readDiseaseFile();
@@ -183,7 +150,7 @@ public class PageRankPriosCrossValidation {
 	public static void main(String[] args){
 		if(args.length != 1){
 			System.out.println("Argument Error.");
-			System.out.println("Using method: java -Xmx2048m -jar PRP.jar ./input/config.txt");
+			System.out.println("Using method: java -Xmx2048m -jar PRP_Prioritization.jar ./input/config.txt");
 			System.exit(-1);
 		}
 		
@@ -191,15 +158,15 @@ public class PageRankPriosCrossValidation {
 		
 		PageRankPriosCrossValidation validation = new PageRankPriosCrossValidation(input.getPpiFilepath(),
 				input.getGeneDiseaseAssociationFilepath(),
-				input.getDiseaseFilepath(), input.getOutputDir());
+				input.getDiseaseFilepath(), input.getOutputDir(), input.getHprdIdMappingsFileName());
 		
-		System.out.println("PageRankPrios Validation starting...");
+		System.out.println("PageRankPrios Prioritization starting...");
 		
-		validation.batch_run();
+		//validation.batch_run();
 		validation.prioritizing();
 		
-		MyLogger.log(args[0] + "---> completed.");
-		System.out.println("PageRankPrios Validation finished...");
+		//MyLogger.log(args[0] + "---> completed.");
+		System.out.println("PageRankPrios Prioritization finished...");
 	}
 	
 }
