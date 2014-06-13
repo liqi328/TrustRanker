@@ -25,4 +25,8 @@ public class Disorder{
 	public String getName() {
 		return name;
 	}
+	
+	public String toString(){
+		return omimId + "\t" + name;
+	}
 }
